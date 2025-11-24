@@ -1,0 +1,10 @@
+[
+  {
+    "title": "Mmegi Newspaper (Sample)",
+    "url": "https://firebasestorage.googleapis.com/v0/b/your-bucket/o/mmegi-sample.pdf?alt=media"
+  },
+  {
+    "title": "Botswana Daily News (Sample)",
+    "url": "https://firebasestorage.googleapis.com/v0/b/your-bucket/o/botswana-daily-news.pdf?alt=media"
+  }
+]
