@@ -70,6 +70,15 @@ app.post('/ask', async (req, res) => {
   }
 });
 
+app.get("/status", (req, res) => {
+  res.json({
+    status: "ok",
+    message: "Backend is running",
+    chunks: global.chunkCount || 0
+  });
+});
+
+
 app.get('/', (_req, res) => {
   res.send('Botswana Newspaper AI Search backend is running.');
 });
