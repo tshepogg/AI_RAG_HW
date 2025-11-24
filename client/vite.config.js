@@ -6,9 +6,9 @@ export default defineConfig({
   server: {
     port: 5173,
     proxy: {
-      '/pdfs': 'http://localhost:3000',
-      '/ask': 'http://localhost:3000',
-      '/view': 'http://localhost:3000',
+      '/pdfs': 'https://ai-rag-hw.onrender.com',
+      '/ask': 'https://ai-rag-hw.onrender.com',
+      '/view': 'https://ai-rag-hw.onrender.com',
     },
   },
 });
