@@ -1,10 +1,10 @@
 [
   {
-    "title": "Mmegi Newspaper (Sample)",
-    "url": "https://firebasestorage.googleapis.com/v0/b/your-bucket/o/mmegi-sample.pdf?alt=media"
+    "title": "Daily News 12 March 2025 ",
+    "url": "https://raw.githubusercontent.com/tshepogg/botswana-newspapers/main/pdfs/12%20March%202025%20%E2%80%A2%2016%20WDwed.pdf"
   },
   {
-    "title": "Botswana Daily News (Sample)",
-    "url": "https://firebasestorage.googleapis.com/v0/b/your-bucket/o/botswana-daily-news.pdf?alt=media"
+    "title": "Daily News 21 Jan 2025",
+    "url": "https://raw.githubusercontent.com/tshepogg/botswana-newspapers/main/pdfs/21%20Jan%20%E2%80%A2%2016%20WDdavos.pdf"
   }
 ]
