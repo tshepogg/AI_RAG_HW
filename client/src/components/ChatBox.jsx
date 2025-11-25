@@ -1,21 +1,44 @@
 import React from 'react';
 
-export default function ChatBox({ answer, sources = [], loading }) {
+export default function ChatBox({ question, answer, loading }) {
+  const hasConversation = question || answer;
+
   return (
     <div className="chat-box">
-      <h3>AI Response</h3>
-      {loading ? <p>Thinking...</p> : <p>{answer || 'Ask a question to see the answer here.'}</p>}
-      {sources.length > 0 && (
-        <div className="sources">
-          <strong>Sources</strong>
-          {sources.map((src, idx) => (
-            <div key={idx} className="source-chip">
-              <div style={{ fontWeight: 700 }}>{src.pdfTitle}</div>
-              <div style={{ whiteSpace: 'pre-wrap' }}>{src.chunkText}</div>
-            </div>
-          ))}
+      <div className="chat-header">
+        <div className="avatar">AI</div>
+        <div>
+          <div className="title">Newspaper Research Assistant</div>
+          <div className="subtitle">Ask anything about the uploaded PDFs.</div>
         </div>
-      )}
+      </div>
+
+      <div className="chat-thread">
+        {!hasConversation ? (
+          <p className="placeholder">Start the conversation by asking a question.</p>
+        ) : (
+          <>
+            {question && (
+              <div className="chat-bubble user">
+                <span className="label">You</span>
+                <p>{question}</p>
+              </div>
+            )}
+
+            <div className="chat-bubble ai">
+              <span className="label">Assistant</span>
+              {loading ? (
+                <div className="loading-state" role="status" aria-label="Loading response">
+                  <div className="spinner" />
+                  <span>Searching the archives...</span>
+                </div>
+              ) : (
+                <p>{answer || 'Ask a question to see the answer here.'}</p>
+              )}
+            </div>
+          </>
+        )}
+      </div>
     </div>
   );
 }
