@@ -9,7 +9,7 @@ export default function App() {
   const [selectedPdfIndex, setSelectedPdfIndex] = useState(0);
   const [question, setQuestion] = useState('');
   const [answer, setAnswer] = useState('');
-  const [sources, setSources] = useState([]);
+  const [lastQuestion, setLastQuestion] = useState('');
   const [searchScope, setSearchScope] = useState('All');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -31,11 +31,12 @@ export default function App() {
     if (!question) return;
     setLoading(true);
     setError('');
+    setAnswer('');
+    setLastQuestion(question);
     try {
       const scope = pdfTitleParam || searchScope || 'All';
       const result = await askQuestion(question, scope);
       setAnswer(result.answer);
-      setSources(result.sources || []);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -83,7 +84,7 @@ export default function App() {
             <button onClick={() => handleAsk()}>Ask</button>
           </div>
           {error && <div style={{ color: 'crimson' }}>{error}</div>}
-          <ChatBox answer={answer} sources={sources} loading={loading} />
+          <ChatBox answer={answer} question={lastQuestion} loading={loading} />
         </div>
         <div className="viewer">
           <PdfViewer pdf={selectedPdf} />
