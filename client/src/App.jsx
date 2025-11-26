@@ -9,20 +9,28 @@ export default function App() {
   const [selectedPdfIndex, setSelectedPdfIndex] = useState(0);
   const [question, setQuestion] = useState('');
   const [answer, setAnswer] = useState('');
-  const [sources, setSources] = useState([]);
+  const [lastQuestion, setLastQuestion] = useState('');
   const [searchScope, setSearchScope] = useState('All');
   const [loading, setLoading] = useState(false);
+  const [pdfLoading, setPdfLoading] = useState(true);
   const [error, setError] = useState('');
 
   useEffect(() => {
-    fetchPdfs()
-      .then((list) => {
+    const loadPdfs = async () => {
+      try {
+        const list = await fetchPdfs();
         setPdfs(list);
         if (list.length > 0) {
           setSelectedPdfIndex(0);
         }
-      })
-      .catch((err) => setError(err.message));
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setPdfLoading(false);
+      }
+    };
+
+    loadPdfs();
   }, []);
 
   const selectedPdf = useMemo(() => pdfs[selectedPdfIndex] || null, [pdfs, selectedPdfIndex]);
@@ -31,11 +39,12 @@ export default function App() {
     if (!question) return;
     setLoading(true);
     setError('');
+    setAnswer('');
+    setLastQuestion(question);
     try {
       const scope = pdfTitleParam || searchScope || 'All';
       const result = await askQuestion(question, scope);
       setAnswer(result.answer);
-      setSources(result.sources || []);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -47,6 +56,22 @@ export default function App() {
     setSelectedPdfIndex(index);
     setSearchScope('All');
   };
+
+  if (pdfLoading) {
+    return (
+      <div className="page-loading">
+        <div className="loading-card">
+          <h1>Botswana Newspaper AI</h1>
+          <p>Loading the archived PDFs from the backend. You can start asking questions once the library is ready.</p>
+          <div className="loading-state" role="status" aria-label="Loading PDFs">
+            <div className="spinner" />
+            <span>Preparing your documents...</span>
+          </div>
+          {error && <div className="error-text">{error}</div>}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="app-layout">
@@ -70,9 +95,10 @@ export default function App() {
               type="text"
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
-              placeholder="Ask a question about the Botswana newspapers..."
+              placeholder={pdfs.length === 0 ? 'No PDFs available yet.' : 'Ask about the Botswana newspapers...'}
+              disabled={pdfs.length === 0}
             />
-            <select value={searchScope} onChange={(e) => setSearchScope(e.target.value)}>
+            <select value={searchScope} onChange={(e) => setSearchScope(e.target.value)} disabled={pdfs.length === 0}>
               <option value="All">All PDFs</option>
               {pdfs.map((pdf) => (
                 <option key={pdf.title} value={pdf.title}>
@@ -80,10 +106,12 @@ export default function App() {
                 </option>
               ))}
             </select>
-            <button onClick={() => handleAsk()}>Ask</button>
+            <button onClick={() => handleAsk()} disabled={pdfs.length === 0}>
+              Ask
+            </button>
           </div>
           {error && <div style={{ color: 'crimson' }}>{error}</div>}
-          <ChatBox answer={answer} sources={sources} loading={loading} />
+          <ChatBox answer={answer} question={lastQuestion} loading={loading} />
         </div>
         <div className="viewer">
           <PdfViewer pdf={selectedPdf} />
